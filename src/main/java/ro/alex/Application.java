@@ -1,7 +1,5 @@
 package ro.alex;
 
-import javax.swing.JButton;
-
 import ro.alex.controller.Controller;
 import ro.alex.model.Model;
 import ro.alex.view.GameBoard;
@@ -14,6 +12,7 @@ public class Application {
 		Model model = new Model();
 		GameBoard gameBoard = new GameBoard(model);
 		Controller controller = new Controller(model, gameBoard);
+		System.out.println("Git test");
 
 	}
 
