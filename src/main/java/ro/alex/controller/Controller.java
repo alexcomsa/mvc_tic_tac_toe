@@ -1,9 +1,10 @@
 package ro.alex.controller;
 
+import ro.alex.model.GameFunctions;
 import ro.alex.model.Model;
 import ro.alex.view.GameBoard;
 
-public class Controller {
+public class Controller implements GameFunctions {
 
 	private Model model;
 	private GameBoard gameBoard;
@@ -22,6 +23,10 @@ public class Controller {
 	}
 	public void setModel(Model model) {
 		this.model = model;
+	}
+	public void clickBoardPiece(int row, int column) {
+		model.setValue(row, column, 99);
+		
 	}
 
 }

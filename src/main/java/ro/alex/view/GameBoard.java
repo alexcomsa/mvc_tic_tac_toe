@@ -5,22 +5,26 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import ro.alex.controller.Controller;
+import ro.alex.model.GameFunctions;
 import ro.alex.model.Model;
 
 public class GameBoard extends JFrame {
 	private Model model;
-	private JButton[][] boardView;
+	private BoardPiece[][] boardView;
 	private JPanel buttonContainer;
+	private GameFunctions controller;
 
 	public GameBoard(Model model) {
 		super("Tic Tac Toe Game");
 		setSize(400, 400);
-		boardView = new JButton[3][3];
+		boardView = new BoardPiece[3][3];
 		buttonContainer = new JPanel();
 		buttonContainer.setSize(600, 600);
 		this.model = model;
@@ -32,17 +36,29 @@ public class GameBoard extends JFrame {
 
 	}
 
-	private void addPiecesToTheBoard() {
-		buttonContainer.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		int k = 1;
-		for (int row = 0; row < 3; row++) {
-			for (int column = 0; column < 3; column++) {
+	public GameFunctions getController() {
+		return controller;
+	}
 
-				JButton button = new JButton();
+	public void setController(GameFunctions controller) {
+		this.controller = controller;
+	}
+
+	private void addPiecesToTheBoard() {
+		buttonContainer
+				.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		int modelRowCount = model.getNumberOfRows();
+		int modelColumnCount = model.getNumberOfColumns();
+		for (int row = 0; row < modelRowCount; row++) {
+			for (int column = 0; column < modelColumnCount; column++) {
+
+				BoardPiece button = new BoardPiece(row, column);
 				button.setSize(1000, 1000);
-				button.setText("click to pick " + k);
-				System.out.println("row " + row + "column " + column + "value " + k);
+				
+				button.addActionListener(new ClickEventListener());
 				boardView[row][column] = button;
+
+				// Set pieces position
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.gridx = column;
 				gbc.gridy = row;
@@ -50,7 +66,7 @@ public class GameBoard extends JFrame {
 				gbc.weighty = 300;
 				gbc.ipady = 500;
 				gbc.ipadx = 500;
-				k++;
+
 				buttonContainer.add(button, gbc);
 			}
 		}
@@ -71,7 +87,7 @@ public class GameBoard extends JFrame {
 		return boardView;
 	}
 
-	public void setBoardView(JButton[][] boardView) {
+	public void setBoardView(BoardPiece[][] boardView) {
 		this.boardView = boardView;
 	}
 
@@ -83,5 +99,24 @@ public class GameBoard extends JFrame {
 	public void setBoardPieceValue(int row, int column, String value) {
 		JButton button = boardView[row][column];
 		button.setText(value);
+	}
+
+	public void setBoardListener(GameFunctions controller) {
+		this.setController(controller);
+
+	}
+
+	private class ClickEventListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent event) {
+
+			BoardPiece clickedBoardPiece = (BoardPiece) event.getSource();
+			controller.clickBoardPiece(clickedBoardPiece.getRow(),
+					clickedBoardPiece.getColumn());
+			clickedBoardPiece.setText(model.getPlayerTurn());
+			clickedBoardPiece.removeActionListener(this);
+
+		}
+
 	}
 }

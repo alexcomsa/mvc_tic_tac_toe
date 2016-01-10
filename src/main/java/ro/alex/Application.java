@@ -10,9 +10,9 @@ public class Application {
 
 	public static void runApplication() {
 		Model model = new Model();
-		GameBoard gameBoard = new GameBoard(model);
-		Controller controller = new Controller(model, gameBoard);
-		System.out.println("Git test");
+		GameBoard view = new GameBoard(model);
+		Controller controller = new Controller(model, view);
+		view.setBoardListener(controller);
 
 	}
 
